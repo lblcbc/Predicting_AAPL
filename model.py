@@ -5,9 +5,11 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from sklearn.metrics import classification_report
+from sklearn import tree
+import matplotlib.pyplot as plt
 
 # %%
-data = pd.read_csv("[data_path]")
+data = pd.read_csv("data_path")
 data.iloc[63:73]
 
 # %%
@@ -62,6 +64,20 @@ print(accuracy)
 # 52% accuracy
 
 # %%
+# Select one of the trees in your random forest model
+estimator = rf.estimators_[5]
+
+plt.figure(figsize=(150,75))
+
+# The plot_tree function readily plots a decision tree
+tree.plot_tree(estimator, 
+               feature_names=X_train.columns, 
+               class_names=['mReturn', 'OpenClose', 'HighLow', 'Return', 'Volume'],
+               filled=True)
+
+plt.show()
+
+# %%
 # EVALUATING PERFORMANCE OF JUST PREDICTING IF TOMORROW MOVES UP OR DOWN
 df = data
 df['NextDayReturn'] = df['Return'].shift(-1)
@@ -99,8 +115,22 @@ print(accuracy)
 
 
 # %%
+# Select one of the trees in your random forest model
+estimator = rf.estimators_[5]
+
+plt.figure(figsize=(150,75))
+
+# The plot_tree function readily plots a decision tree
+tree.plot_tree(estimator, 
+               feature_names=X_train.columns, 
+               class_names=['UP', 'DOWN'],
+               filled=True)
+
+plt.show()
+
+# %%
 # Testing on Goldman Sachs, different sector to Apple
-data = pd.read_csv("[data_path]")
+data = pd.read_csv("data_path")
 df = data
 num_days = 62
 features = ['mReturn', 'OpenClose', 'HighLow', 'Return', 'Volume']
@@ -136,7 +166,7 @@ print(accuracy_gs)
 
 # %%
 # Testing on zoom, which has fallen dramatrically since data start period (2020) to now (2023)
-data = pd.read_csv("[data_path]")
+data = pd.read_csv("data_path")
 df = data
 num_days = 62
 features = ['mReturn', 'OpenClose', 'HighLow', 'Return', 'Volume']
@@ -167,5 +197,14 @@ recall_zm = recall_score(y_zm, y_pred, average='macro')
 f1_gs = f1_score(y_zm, y_pred, average='macro')
 print(accuracy_zm)
 # 68%, decent
+
+# %%
+
+
+# %%
+
+
+# %%
+
 
 
