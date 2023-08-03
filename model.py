@@ -165,7 +165,7 @@ print(accuracy_gs)
 
 
 # %%
-# Testing on zoom, which has fallen dramatrically since data start period (2020) to now (2023)
+# Testing on ZM, which has fallen dramatrically since data start period (2020) to now (2023)
 data = pd.read_csv("data_path")
 df = data
 num_days = 62
@@ -197,5 +197,40 @@ recall_zm = recall_score(y_zm, y_pred, average='macro')
 f1_gs = f1_score(y_zm, y_pred, average='macro')
 print(accuracy_zm)
 # 68%, decent
+
+
+# %%
+# Testing on LHA, European market
+data = pd.read_csv("data_path")
+df = data
+num_days = 62
+features = ['mReturn', 'OpenClose', 'HighLow', 'Return', 'Volume']
+
+for feature in features:
+    for day in range(1, num_days+1):
+        df[f'{feature}_{day}'] = df[feature].shift(day)
+
+df = df.iloc[63:]
+
+df['NextDayReturn'] = df['Return'].shift(-1)
+
+df['Labels'] = df['NextDayReturn'].apply(lambda x: 'UP' if x > 0 else 'DOWN')
+
+df = df.iloc[:-1]
+
+df.head()
+
+
+X_lha = df.drop(['Labels', 'NextDayReturn'], axis=1)
+y_lha = df['Labels']
+
+y_pred = rf.predict(X_lha)
+
+accuracy_lha = accuracy_score(y_lha, y_pred)
+precision_lha = precision_score(y_lha, y_pred, average='macro')
+recall_lha = recall_score(y_lha, y_pred, average='macro')
+f1_lha = f1_score(y_lha, y_pred, average='macro')
+print(accuracy_lha)
+# 66%, decent
 
 
