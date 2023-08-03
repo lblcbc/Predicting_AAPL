@@ -198,13 +198,4 @@ f1_gs = f1_score(y_zm, y_pred, average='macro')
 print(accuracy_zm)
 # 68%, decent
 
-# %%
-
-
-# %%
-
-
-# %%
-
-
 
